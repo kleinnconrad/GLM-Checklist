@@ -1,4 +1,8 @@
 # Databricks notebook source
+# MAGIC %pip install statsmodels
+
+# COMMAND ----------
+
 from pyspark.sql import SparkSession
 import pandas as pd
 import numpy as np
