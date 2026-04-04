@@ -14,7 +14,7 @@
 
 # GLM Predictive Analytics Checklist
 
-This checklist serves as a guide for the development, validation, and evaluation of Generalized Linear Models (GLMs) in the field of predictive analytics. It ensures that all critical methodological steps, from data preparation to model evaluation, are rigorously followed.
+This checklist serves as a guide for the development, validation, and evaluation of Generalized Linear Models (GLMs) in the field of predictive analytics.
 
 It contains an example implementation that can be deployed to Databricks with Asset Bundles.
 
