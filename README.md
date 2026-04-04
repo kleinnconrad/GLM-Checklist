@@ -16,6 +16,8 @@
 
 This checklist serves as a guide for the development, validation, and evaluation of Generalized Linear Models (GLMs) in the field of predictive analytics. It ensures that all critical methodological steps, from data preparation to model evaluation, are rigorously followed.
 
+It contains an example implementation that can be deployed to Databricks with Asset Bundles.
+
 ## 1. Data Preparation
 - [ ] **Imputation:** Missing values were appropriately replaced using suitable methods (e.g., mean/median imputation, KNN, model-based).
 - [ ] **Outlier Handling:** Extreme data points were identified and adequately handled (e.g., via capping/clipping or transformation) to prevent distortion of the model weights.
