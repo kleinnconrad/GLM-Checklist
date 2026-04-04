@@ -1,0 +1,46 @@
+resources:
+  jobs:
+    glm_model_pipeline:
+      name: "GLM Predictive Analytics Pipeline"
+      
+      environments:
+        - environment_key: serverless_env
+          spec:
+            environment_version: "1"  # <-- Hier ist die Korrektur!
+            dependencies:
+              - "scikit-learn"
+              - "statsmodels"
+              
+      tasks:
+        - task_key: 01_data_preparation
+          spark_python_task:
+            python_file: ../src/1_data_preparation.py
+          environment_key: serverless_env
+
+        - task_key: 02_feature_engineering
+          depends_on:
+            - task_key: 01_data_preparation
+          spark_python_task:
+            python_file: ../src/2_feature_engineering_selection.py
+          environment_key: serverless_env
+
+        - task_key: 03_model_setup
+          depends_on:
+            - task_key: 02_feature_engineering
+          spark_python_task:
+            python_file: ../src/3_model_setup.py
+          environment_key: serverless_env
+
+        - task_key: 04_training_validation
+          depends_on:
+            - task_key: 03_model_setup
+          spark_python_task:
+            python_file: ../src/4_training_validation.py
+          environment_key: serverless_env
+
+        - task_key: 05_model_evaluation
+          depends_on:
+            - task_key: 04_training_validation
+          spark_python_task:
+            python_file: ../src/5_model_evaluation_metrics.py
+          environment_key: serverless_env

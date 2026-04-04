@@ -1,40 +1,53 @@
+from pyspark.sql import SparkSession
 import pandas as pd
-import numpy as np
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import log_loss
 
-# Generate dummy time-series data
-dates = pd.date_range(start='2023-01-01', periods=1000, freq='D')
-data = pd.DataFrame({
-    'date': dates,
-    'feature': np.random.normal(0, 1, 1000),
-    'target': np.random.randint(0, 2, 1000)
-})
+spark = SparkSession.builder.getOrCreate()
 
 print("\n--- 4. Training & Validation ---")
+print("Reading data from Step 3...")
+data = spark.table("workspace.default.glm_03_model_ready").toPandas()
 
-# 1. Out-of-Time Validation (Strict temporal shift)
-train_data = data[data['date'] < '2025-01-01']
-val_data = data[(data['date'] >= '2025-01-01') & (data['date'] < '2025-08-01')]
-# Prediction/Test set would be > 2025-08-01
+# Ensure date column is datetime format for out-of-time splitting
+if 'date' in data.columns and 'target' in data.columns and 'feature_A' in data.columns:
+    data['date'] = pd.to_datetime(data['date'])
 
-X_train, y_train = train_data[['feature']], train_data['target']
-X_val, y_val = val_data[['feature']], val_data['target']
+    # 1. Out-of-Time Validation (Adjust dates to your actual dataset timeline!)
+    split_date = '2025-01-01'
+    train_data = data[data['date'] < split_date].copy()
+    val_data = data[data['date'] >= split_date].copy()
 
-# Train Model
-model = LogisticRegression().fit(X_train, y_train)
+    # Define features to use
+    features = ['feature_A'] # Add more features here based on step 2
+    
+    X_train, y_train = train_data[features].fillna(0), train_data['target']
+    X_val, y_val = val_data[features].fillna(0), val_data['target']
 
-# 2. Overfitting / Underfitting Check
-train_preds = model.predict_proba(X_train)[:, 1]
-val_preds = model.predict_proba(X_val)[:, 1]
+    # 2. Train Model
+    print("Training Logistic Regression Model...")
+    model = LogisticRegression(max_iter=1000).fit(X_train, y_train)
 
-train_loss = log_loss(y_train, train_preds)
-val_loss = log_loss(y_val, val_preds)
+    # 3. Generate Predictions
+    train_preds = model.predict_proba(X_train)[:, 1]
+    val_preds = model.predict_proba(X_val)[:, 1]
 
-print(f"Training Log-Loss: {train_loss:.4f}")
-print(f"Validation Log-Loss: {val_loss:.4f}")
-if val_loss > train_loss * 1.2:
-    print("Warning: Potential Overfitting detected.")
+    # Overfitting Check
+    train_loss = log_loss(y_train, train_preds)
+    val_loss = log_loss(y_val, val_preds)
+    print(f"Training Log-Loss: {train_loss:.4f} | Validation Log-Loss: {val_loss:.4f}")
+
+    # Append predictions back to the validation dataframe for Step 5
+    val_data['predicted_probability'] = val_preds
+    
+    print("Saving validation set with predictions...")
+    # Convert validation data with predictions to Spark and save
+    spark_df_preds = spark.createDataFrame(val_data)
+    spark_df_preds.write \
+        .mode("overwrite") \
+        .option("mergeSchema", "true") \
+        .saveAsTable("workspace.default.glm_04_predictions")
+
+    print("Step 4 Complete. Saved as: workspace.default.glm_04_predictions")
 else:
-    print("Model generalizes well to the validation set.")
-  
+    print("Missing 'date', 'target', or 'feature_A' columns. Cannot execute split.")

@@ -1,0 +1,37 @@
+name: Deploy Databricks GLM Pipeline
+
+on:
+  push:
+    branches:
+      - main # Falls dein Haupt-Branch 'master' heißt, ändere dies entsprechend
+    paths:
+      - 'databricks.yml'
+      - 'resources/**/*.yml'
+      - 'src/**/*.py'
+
+jobs:
+  deploy:
+    name: Validate & Deploy DAB
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # Installiert die offizielle Databricks CLI im Runner
+      - name: Setup Databricks CLI
+        uses: databricks/setup-cli@main
+
+      # Prüft die YAML-Syntax und Konfiguration, bevor etwas hochgeladen wird
+      - name: Validate Bundle
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+        run: databricks bundle validate
+
+      # Führt den eigentlichen Deploy in deinen Workspace aus
+      - name: Deploy Bundle
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+        run: databricks bundle deploy
