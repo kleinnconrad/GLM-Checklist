@@ -1,4 +1,4 @@
-# 📋 GLM Predictive Analytics Checklist
+# GLM Predictive Analytics Checklist
 
 This checklist serves as a guide for the development, validation, and evaluation of Generalized Linear Models (GLMs) in the field of predictive analytics. It ensures that all critical methodological steps, from data preparation to model evaluation, are rigorously followed.
 
