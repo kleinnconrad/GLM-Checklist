@@ -1,4 +1,4 @@
-## Table of Contents
+i## Table of Contents
 
 * [GLM Predictive Analytics Checklist](#glm-predictive-analytics-checklist)
   * [1. Data Preparation](#1-data-preparation)
@@ -75,3 +75,13 @@ To run this pipeline in your own fork/environment, the following GitHub Reposito
 
 * `DATABRICKS_HOST`: Your Databricks workspace URL (e.g., `https://dbc-xxxx.cloud.databricks.com`).
 * `DATABRICKS_TOKEN`: A valid Databricks Personal Access Token (PAT) with permissions to create and run jobs in the target workspace.
+
+### Automated Testing (Continuous Integration)
+
+To ensure high code quality and prevent broken logic from being deployed to the Databricks workspace, the GitHub Actions workflow includes an automated testing suite. These tests run sequentially on every push to the repository. If any test fails, the deployment is automatically aborted.
+
+The pipeline currently executes the following validation steps:
+
+* **Code Linting (`flake8`):** Analyzes the Python scripts for logical anomalies and syntax errors. It ensures clean code by catching issues like undefined variables, unused imports, or excessively complex functions before they reach the execution environment.
+* **Security Scanning (`bandit`):** Performs static security analysis on the codebase. It scans all Python files for common security vulnerabilities (such as hardcoded credentials or insecure use of standard libraries) to ensure the pipeline handles data securely.
+* **Unit Testing (`pytest`):** Validates the core mathematical and data transformation logic independent of the PySpark/Databricks environment. Using synthetic DataFrames, it verifies that custom functions—such as outlier clipping, binary sequence conversions, and the KS-statistic cutoff calculation—return the exact expected statistical results.
