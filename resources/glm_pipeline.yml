@@ -1,7 +1,7 @@
 resources:
   jobs:
     glm_model_pipeline:
-      name: "GLM Predictive Analytics Pipeline."
+      name: "GLM Predictive Analytics Pipeline"
       
       tasks:
         - task_key: 01_data_preparation
