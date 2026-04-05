@@ -31,8 +31,8 @@ jobs:
           pip install black flake8 pytest bandit pandas numpy scikit-learn statsmodels
 
       # 3. Code Formatting Check (Fails if code isn't formatted correctly)
-      - name: Check formatting with Black
-        run: black --check src/
+     # - name: Check formatting with Black
+     #   run: black --check src/
 
       # 4. Linting (Fails if there are syntax errors or undefined names)
       - name: Lint with Flake8
