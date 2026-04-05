@@ -1,3 +1,6 @@
+[![Deploy Databricks GLM Pipeline](https://github.com/kleinnconrad/glm-checklist/actions/workflows/deploy_bundle.yml/badge.svg)](https://github.com/kleinnconrad/glm-checklist/actions/workflows/deploy_bundle.yml)
+
+
 ## Table of Contents
 
 * [GLM Predictive Analytics Checklist](#glm-predictive-analytics-checklist)
