@@ -1,4 +1,4 @@
-i## Table of Contents
+## Table of Contents
 
 * [GLM Predictive Analytics Checklist](#glm-predictive-analytics-checklist)
   * [1. Data Preparation](#1-data-preparation)
@@ -8,10 +8,11 @@ i## Table of Contents
   * [5. Model Evaluation & Business Metrics](#5-model-evaluation--business-metrics)
   * [Infrastructure & Orchestration: Databricks Asset Bundles (DABs)](#infrastructure--orchestration-databricks-asset-bundles-dabs)
     * [Bundle Architecture](#bundle-architecture)
-  * [CI/CD Pipeline (GitHub Actions)](#-cicd-pipeline-github-actions)
-    * [Workflow overview (`.github/workflows/deploy_bundle.yml`)](#️-workflow-overview-githubworkflowsdeploy_bundleyml)
+  * [CI/CD Pipeline (GitHub Actions)](#cicd-pipeline-github-actions)
+    * [Workflow overview (`.github/workflows/deploy_bundle.yml`)](#workflow-overview-githubworkflowsdeploy_bundleyml)
     * [Required Secrets](#required-secrets)
-
+    * [Automated Testing (Continuous Integration)](#automated-testing-continuous-integration)
+   
 # GLM Predictive Analytics Checklist
 
 This checklist serves as a guide for the development, validation, and evaluation of Generalized Linear Models (GLMs) in the field of predictive analytics.
